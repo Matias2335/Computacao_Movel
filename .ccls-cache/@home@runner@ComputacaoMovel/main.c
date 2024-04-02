@@ -4,6 +4,7 @@
 #define Botao_Nao 9;
 #define Botao_Pular 8;
 
+
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 
 
@@ -13,6 +14,8 @@ void setup(){
   pinMode(Botao_Nao, INPUT_PULLUP);
   pinMode(Botao_Pular, INPUT_PULLUP);
 }
+
+
 
 int main(void) {
   printf("Hello World\n");
