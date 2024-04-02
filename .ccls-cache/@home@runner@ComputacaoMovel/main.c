@@ -1,4 +1,4 @@
-#include <LiquidCrystal.h>
+#include "LiquidCrystal.h"
 #define Botao_Iniciar 11;
 #define Botao_Sim 10;
 #define Botao_Nao 9;
@@ -13,6 +13,7 @@ void setup(){
   pinMode(Botao_Sim, INPUT_PULLUP);
   pinMode(Botao_Nao, INPUT_PULLUP);
   pinMode(Botao_Pular, INPUT_PULLUP);
+  pinMode(Led,OutPut);
 }
 
 
