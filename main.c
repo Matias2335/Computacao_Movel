@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define Botao_Iniciar 11
-#define Botao_Sim 10
-#define Botao_Nao 9
-#define Botao_Pular 8
-#define LED 12
-#define TAMANHO_VETOR 16
+#define Botao_Iniciar 11;
+#define Botao_Sim 10;
+#define Botao_Nao 9;
+#define Botao_Pular 8;
+#define LED 12;
+#define TAMANHO_VETOR 16;
 
 LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 
@@ -56,9 +56,8 @@ void loop() {
     imprimirPerguntaAleatoria();
 
     while (true) {
-      // Botão Sim
+
       if (digitalRead(Botao_Sim) == LOW) {
-        // Processar resposta "Sim"
         digitalWrite(LED, HIGH);
         delay(500);
         digitalWrite(LED, LOW);
