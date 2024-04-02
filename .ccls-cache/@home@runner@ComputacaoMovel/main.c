@@ -19,14 +19,10 @@ void inserirPergunta(Pergunta pergunta, int indice) {
 }
 
 void imprimirPerguntaAleatoria() {
-  int indiceAleatorio = gerarNumeroAleatorio();
+  int indiceAleatorio = random(TAMANHO_VETOR);
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(perguntas[indiceAleatorio]);
-}
-
-int gerarNumeroAleatorio() {
-  return rand() % TAMANHO_VETOR;
 }
 
 void setup() {
@@ -39,6 +35,8 @@ void setup() {
 
   inserirPergunta("PERGUNTA 1?");
   inserirPergunta("PERGUNTA 2?");
+
+  randomSeed(analogRead(0));
 
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -65,14 +63,12 @@ void loop() {
       }
 
       if (digitalRead(Botao_Nao) == LOW) {
-    
         digitalWrite(LED, LOW);
         delay(500);
         break;
       }
 
       if (digitalRead(Botao_Pular) == LOW) {
-  
         break;
       }
     }
