@@ -128,3 +128,18 @@ if (comprimento > 16) {
   // Se a pergunta não exceder a largura do display, simplesmente a escreva no display
   lcd.print(perguntaSelecionada);
 }
+
+  delay(2000);
+  lcd.clear();
+  lcd.write("Q-");
+  lcd.print(numeroQuestao); // Mostra o número da questão atual
+  lcd.setCursor(8, 0);
+  lcd.write("Score=");
+  lcd.print(score);
+  lcd.setCursor(2, 1);
+  lcd.write("Sim");
+  lcd.setCursor(7, 1);
+  lcd.write("ou");
+  lcd.setCursor(10, 1);
+  lcd.write("Nao");
+  startTime = millis();
