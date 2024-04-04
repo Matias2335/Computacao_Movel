@@ -150,3 +150,16 @@ if (comprimento > 16) {
     buttonStateN = digitalRead(9);
     buttonStateP = digitalRead(8);
     buttonStateF = digitalRead(7);
+
+    // Verifica se o tempo restante está na metade e pisca o LED
+    if (millis() - startTime >= tempoTotal / 2) {
+      digitalWrite(ledPin, HIGH);
+      delay(250);
+      digitalWrite(ledPin, LOW);
+      delay(500);
+      }
+
+    if (buttonStateS == HIGH || buttonStateN == HIGH || buttonStateP == HIGH || buttonStateF == HIGH) {
+      break; // Sai do loop enquanto
+    }
+  }
