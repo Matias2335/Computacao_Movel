@@ -207,3 +207,17 @@ if (comprimento > 16) {
       // Reduza o número de tentativas por resposta errada
       score -= 1; // Aplique uma penalidade por resposta errada
       lcd.write("Resposta Errada! -1 ponto");
+      // Verifica se o usuário ainda tem vidas restantes
+          if (tentativas == 0) {
+            lcd.clear();
+            lcd.write("Fim do Jogo!");
+            lcd.setCursor(3,1);
+            lcd.write("Score=");
+            lcd.print(score);
+            delay(5000);
+            while (true) {
+              // Loop infinito para encerrar o jogo
+            }
+          }
+        }
+      }
