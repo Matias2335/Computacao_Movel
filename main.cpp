@@ -196,4 +196,10 @@ if (comprimento > 16) {
     while (true) {
       // Loop infinito para encerrar o jogo
     }
-    
+  } else {
+    if ((buttonStateS == HIGH && *respostaEsperada == 'S') || (buttonStateN == HIGH && *respostaEsperada == 'N')) {
+      score++;
+      // Adicionei um bônus de pontuação por resposta correta
+      score += 2; // Adicionei um bônus extra por resposta rápida
+      lcd.write("Resposta Correta! +2 pontos!");
+    }
