@@ -202,4 +202,8 @@ if (comprimento > 16) {
       // Adicionei um bônus de pontuação por resposta correta
       score += 2; // Adicionei um bônus extra por resposta rápida
       lcd.write("Resposta Correta! +2 pontos!");
-    }
+    } else {
+      tentativas--;
+      // Reduza o número de tentativas por resposta errada
+      score -= 1; // Aplique uma penalidade por resposta errada
+      lcd.write("Resposta Errada! -1 ponto");
