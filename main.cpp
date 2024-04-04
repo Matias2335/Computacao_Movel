@@ -163,3 +163,8 @@ if (comprimento > 16) {
       break; // Sai do loop enquanto
     }
   }
+  // Desliga o LED após o tempo esgotado
+  digitalWrite(ledPin, LOW);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
