@@ -143,3 +143,10 @@ if (comprimento > 16) {
   lcd.setCursor(10, 1);
   lcd.write("Nao");
   startTime = millis();
+
+  // Aguardar até que algum botão seja pressionado, o tempo se esgote, o botão de pular seja pressionado ou o botão de encerrar seja pressionado
+  while (millis() - startTime < tempoTotal) {
+    buttonStateS = digitalRead(10);
+    buttonStateN = digitalRead(9);
+    buttonStateP = digitalRead(8);
+    buttonStateF = digitalRead(7);
