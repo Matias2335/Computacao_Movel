@@ -221,3 +221,9 @@ if (comprimento > 16) {
           }
         }
       }
+  
+    delay(5000);
+
+    // Incrementa o número da questão para pular para a próxima
+    numeroQuestao++;
+  }
