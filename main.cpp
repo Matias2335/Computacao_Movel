@@ -168,3 +168,22 @@ if (comprimento > 16) {
 
   lcd.clear();
   lcd.setCursor(0, 0);
+
+  if (millis() - startTime >= tempoTotal || buttonStateP == HIGH) {
+  lcd.write("Pulou a questao");
+  tentativas--;
+  lcd.setCursor(0, 1);
+  lcd.write("Restam ");
+  lcd.print(tentativas);
+  lcd.write(" Vidas");
+  if (tentativas == 0){
+    lcd.clear();
+    lcd.write("Fim do Jogo!");
+    lcd.setCursor(3,1);
+    lcd.write("Score=");
+    lcd.print(score);
+    delay(5000);
+    while (true) {
+      // Loop infinito para encerrar o jogo
+    }
+  }
