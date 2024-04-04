@@ -132,16 +132,28 @@ void loop() {
   int comprimento = strlen(perguntaSelecionada);
 
   if (comprimento > 16) {
+    lcd.clear(); // Limpa o LCD
     for (int i = 0; i < comprimento; i++) {
-      lcd.write(perguntaSelecionada[i]);
-      delay(250);
-      if (i > 15) {
-        lcd.scrollDisplayLeft();
+        if (i == 16) {
+            lcd.clear(); // Limpa o LCD após 16 caracteres
+            lcd.setCursor(0, 1); // Vai para a segunda linha
+        } else if (i == 32) {
+            lcd.clear(); // Limpa o LCD após 32 caracteres
+            lcd.setCursor(1, 0); // Volta para a primeira linha
+        } else if (i == 48) {
+            lcd.clear(); // Limpa o LCD após 48 caracteres
+            lcd.setCursor(0, 1); // Vai para a segunda linha
+        }else if (i ==64){
+          lcd.clear();
+            lcd.setCursor(1,0);
       }
+        lcd.write(perguntaSelecionada[i]);
+        delay(250);
     }
-  } else {
+} else {
     lcd.print(perguntaSelecionada);
-  }
+}
+
 
   delay(2000);
   lcd.clear();
@@ -241,4 +253,6 @@ void loop() {
 
   // Incrementa o número da questão para pular para a próxima
   numeroQuestao++;
+
+  
 }
