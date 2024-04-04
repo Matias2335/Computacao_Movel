@@ -106,5 +106,14 @@ void loop() {
               perguntaSelecionada = perguntaImpossivel[indice];
               respostaEsperada = &respostasImpossivel[indice];
               break;
+            
+            
           }
+  lcd.clear();
+  lcd.write("Questao ");
+  lcd.print(numeroQuestao); // Mostra o número da questão atual
+  lcd.write(":");
+  delay(3000);
+  lcd.clear();
+  lcd.home();
         }
