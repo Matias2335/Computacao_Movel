@@ -187,3 +187,13 @@ if (comprimento > 16) {
       // Loop infinito para encerrar o jogo
     }
   }
+  } else if (buttonStateF == HIGH || tentativas == 0) {
+    lcd.write("Fim do Jogo!");
+    lcd.setCursor(0, 1);
+    lcd.write("Score=");
+    lcd.print(score);
+    delay(5000);
+    while (true) {
+      // Loop infinito para encerrar o jogo
+    }
+    
