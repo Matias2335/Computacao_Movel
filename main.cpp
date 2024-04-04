@@ -2,16 +2,22 @@
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-int buttonStateS = 0;
-int buttonStateN = 0;
-int buttonStateP = 0;
-int buttonStateF = 0; // Botão para encerrar o jogo
+int Botao_Sim = 0;
+int Botao_Nao = 0;
+int Botao_Pular = 0;
+int Botao_Finalizar = 0; // Botão para encerrar o jogo
 int score = 0;
 int tentativas = 3;
 int numeroQuestao = 1; // Variável para controlar o número da questão atual
 unsigned long startTime = 0;
 const int tempoTotal = 15000; // Aumentei o tempo total para 15 segundos
 const int ledPin = 6;
+
+// Arrays para controlar quais perguntas já foram feitas
+bool perguntasFeitasFaceis[5] = {false};
+bool perguntasFeitasMedias[5] = {false};
+bool perguntasFeitasDificeis[5] = {false};
+bool perguntaFeitaImpossivel = false;
 
 // Array de perguntas e respostas fáceis
 char perguntasFaceis[5][72] = {
@@ -46,7 +52,6 @@ char perguntasDificeis[5][72] = {
 
 char respostasDificeis[5] = {'S', 'N', 'N', 'S', 'N'}; // Respostas correspondentes às perguntas difíceis
 
-
 // Array de perguntas e respostas impossíveis
 char perguntaImpossivel[1][72] = {
   "Eh possivel terminar o jogo 'Dark Souls' sem sofrer nenhum dano?"
@@ -67,37 +72,55 @@ void setup() {
 }
 
 void loop() {
-  // Escolhe aleatoriamente um nível de dificuldade (0 para fácil, 1 para médio, 2 para difícil)
-  int nivel = random(0, 3); // Adicionei o nível "Impossível", então agora varia de 0 a 2
-
-  // Escolhe aleatoriamente uma questão do nível de dificuldade selecionado
+  // Escolhe aleatoriamente um nível de dificuldade (0 para fácil, 1 para médio, 2 para difícil, 3 para impossível)
+  int nivel;
   int indice;
   char* perguntaSelecionada;
   char* respostaEsperada;
 
-  switch (nivel) {
-    case 0: // Fácil
-      indice = random(0, 7);
-      perguntaSelecionada = perguntasFaceis[indice];
-      respostaEsperada = &respostasFaceis[indice];
-      break;
-    case 1: // Médio
-      indice = random(0, 7);
-      perguntaSelecionada = perguntasMedias[indice];
-      respostaEsperada = &respostasMedias[indice];
-      break;
-    case 2: // Difícil
-      indice = random(0, 7);
-      perguntaSelecionada = perguntasDificeis[indice];
-      respostaEsperada = &respostasDificeis[indice];
-      break;
-    case 3: // Impossível
-      indice = 0; // Apenas uma pergunta no nível "Impossível"
-      perguntaSelecionada = perguntaImpossivel[indice];
-      respostaEsperada = &respostasImpossivel[indice];
-      break;
-  }
-//VICTOR
+  do {
+    nivel = random(0, 4);
+
+    switch (nivel) {
+      case 0: // Fácil
+        indice = random(0, 5);
+        if (!perguntasFeitasFaceis[indice]) {
+          perguntasFeitasFaceis[indice] = true;
+          perguntaSelecionada = perguntasFaceis[indice];
+          respostaEsperada = &respostasFaceis[indice];
+        }
+        break;
+      case 1: // Médio
+        indice = random(0, 5);
+        if (!perguntasFeitasMedias[indice]) {
+          perguntasFeitasMedias[indice] = true;
+          perguntaSelecionada = perguntasMedias[indice];
+          respostaEsperada = &respostasMedias[indice];
+        }
+        break;
+      case 2: // Difícil
+        indice = random(0, 5);
+        if (!perguntasFeitasDificeis[indice]) {
+          perguntasFeitasDificeis[indice] = true;
+          perguntaSelecionada = perguntasDificeis[indice];
+          respostaEsperada = &respostasDificeis[indice];
+        }
+        break;
+      case 3: // Impossível
+        if (!perguntaFeitaImpossivel) {
+          perguntaFeitaImpossivel = true;
+          indice = 0;
+          perguntaSelecionada = perguntaImpossivel[indice];
+          respostaEsperada = &respostasImpossivel[indice];
+        }
+        break;
+    }
+
+    if (perguntaSelecionada != NULL) {
+      break; // Sai do loop do-while se uma pergunta válida foi selecionada
+    }
+  } while (true);
+
   lcd.clear();
   lcd.write("Questao ");
   lcd.print(numeroQuestao); // Mostra o número da questão atual
@@ -117,7 +140,6 @@ void loop() {
       }
     }
   } else {
-    // Se a pergunta não exceder a largura do display, simplesmente a escreva no display
     lcd.print(perguntaSelecionada);
   }
 
@@ -138,10 +160,10 @@ void loop() {
 
   // Aguardar até que algum botão seja pressionado, o tempo se esgote, o botão de pular seja pressionado ou o botão de encerrar seja pressionado
   while (millis() - startTime < tempoTotal) {
-    buttonStateS = digitalRead(10);
-    buttonStateN = digitalRead(9);
-    buttonStateP = digitalRead(8);
-    buttonStateF = digitalRead(7);
+    Botao_Sim = digitalRead(10);
+    Botao_Nao = digitalRead(9);
+    Botao_Pular = digitalRead(8);
+    Botao_Finalizar = digitalRead(7);
 
     // Verifica se o tempo restante está na metade e pisca o LED
     if (millis() - startTime >= tempoTotal / 2) {
@@ -151,7 +173,7 @@ void loop() {
       delay(500);
     }
 
-    if (buttonStateS == HIGH || buttonStateN == HIGH || buttonStateP == HIGH || buttonStateF == HIGH) {
+    if (Botao_Sim == HIGH || Botao_Nao == HIGH || Botao_Pular == HIGH || Botao_Finalizar == HIGH) {
       break; // Sai do loop enquanto
     }
   }
@@ -162,14 +184,14 @@ void loop() {
   lcd.clear();
   lcd.setCursor(0, 0);
 
-  if (millis() - startTime >= tempoTotal || buttonStateP == HIGH) {
+  if (millis() - startTime >= tempoTotal || Botao_Pular == HIGH) {
     lcd.write("Pulou a questao");
     tentativas--;
     lcd.setCursor(0, 1);
     lcd.write("Restam ");
     lcd.print(tentativas);
     lcd.write(" Vidas");
-    if (tentativas == 0){
+    if (tentativas == 0) {
       lcd.clear();
       lcd.write("Fim do Jogo!");
       lcd.setCursor(3,1);
@@ -180,7 +202,7 @@ void loop() {
         // Loop infinito para encerrar o jogo
       }
     }
-  } else if (buttonStateF == HIGH || tentativas == 0) {
+  } else if (Botao_Finalizar == HIGH || tentativas == 0) {
     lcd.write("Fim do Jogo!");
     lcd.setCursor(0, 1);
     lcd.write("Score=");
@@ -190,7 +212,7 @@ void loop() {
       // Loop infinito para encerrar o jogo
     }
   } else {
-    if ((buttonStateS == HIGH && *respostaEsperada == 'S') || (buttonStateN == HIGH && *respostaEsperada == 'N')) {
+    if ((Botao_Sim == HIGH && *respostaEsperada == 'S') || (Botao_Nao == HIGH && *respostaEsperada == 'N')) {
       score++;
       // Adicionei um bônus de pontuação por resposta correta
       score += 2; // Adicionei um bônus extra por resposta rápida
