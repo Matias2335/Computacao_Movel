@@ -78,37 +78,34 @@ void setup() {
 }
 
 void loop() {
-          int nivel = random(0, 4); // Adicionei o nível "Impossível", então agora varia de 0 a 3
+  int nivel = random(0, 4); // Adicionei o nível "Impossível", então agora varia de 0 a 3
+  // Escolhe aleatoriamente uma questão do nível de dificuldade selecionado
+  int indice;
+  char* perguntaSelecionada;
+  char* respostaEsperada;
 
-          // Escolhe aleatoriamente uma questão do nível de dificuldade selecionado
-          int indice;
-          char* perguntaSelecionada;
-          char* respostaEsperada;
-
-          switch (nivel) {
-            case 0: // Fácil
-              indice = random(0, 5);
-              perguntaSelecionada = perguntasFaceis[indice];
-              respostaEsperada = &respostasFaceis[indice];
-              break;
-            case 1: // Médio
-              indice = random(0, 5);
-              perguntaSelecionada = perguntasMedias[indice];
-              respostaEsperada = &respostasMedias[indice];
-              break;
-            case 2: // Difícil
-              indice = random(0, 5);
-              perguntaSelecionada = perguntasDificeis[indice];
-              respostaEsperada = &respostasDificeis[indice];
-              break;
-            case 3: // Impossível
-              indice = 0; // Apenas uma pergunta no nível "Impossível"
-              perguntaSelecionada = perguntaImpossivel[indice];
-              respostaEsperada = &respostasImpossivel[indice];
-              break;
-            
-            
-          }
+  switch (nivel) {
+    case 0: // Fácil
+      indice = random(0, 5);
+      perguntaSelecionada = perguntasFaceis[indice];
+      respostaEsperada = &respostasFaceis[indice];
+      break;
+    case 1: // Médio
+      indice = random(0, 5);
+      perguntaSelecionada = perguntasMedias[indice];
+      respostaEsperada = &respostasMedias[indice];
+      break;
+    case 2: // Difícil
+      indice = random(0, 5);
+      perguntaSelecionada = perguntasDificeis[indice];
+      respostaEsperada = &respostasDificeis[indice];
+      break;
+    case 3: // Impossível
+      indice = 0; // Apenas uma pergunta no nível "Impossível"
+      perguntaSelecionada = perguntaImpossivel[indice];
+      respostaEsperada = &respostasImpossivel[indice];
+      break;  
+}
   lcd.clear();
   lcd.write("Questao ");
   lcd.print(numeroQuestao); // Mostra o número da questão atual
@@ -116,4 +113,18 @@ void loop() {
   delay(3000);
   lcd.clear();
   lcd.home();
-        }
+  
+int comprimento = strlen(perguntaSelecionada);
+
+if (comprimento > 16) {
+  for (int i = 0; i < comprimento; i++) {
+    lcd.write(perguntaSelecionada[i]);
+    delay(250);
+    if (i > 15) {
+      lcd.scrollDisplayLeft();
+    }
+  }
+} else {
+  // Se a pergunta não exceder a largura do display, simplesmente a escreva no display
+  lcd.print(perguntaSelecionada);
+}
