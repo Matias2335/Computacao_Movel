@@ -5,13 +5,14 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 int Botao_Sim = 0;
 int Botao_Nao = 0;
 int Botao_Pular = 0;
-int Botao_Finalizar = 0; // Botão para encerrar o jogo
+int Botao_Desistir = 0; // Botão para desistir do jogo na porta 7
 int score = 0;
 int tentativas = 3;
 int numeroQuestao = 1; // Variável para controlar o número da questão atual
 unsigned long startTime = 0;
 const int tempoTotal = 15000; // Aumentei o tempo total para 15 segundos
 const int ledPin = 6;
+const int buzzerPin = 14; // Pino do buzzer
 
 // Arrays para controlar quais perguntas já foram feitas
 bool perguntasFeitasFaceis[5] = {false};
@@ -59,14 +60,41 @@ char perguntaImpossivel[1][72] = {
 
 char respostasImpossivel[1] = {'N'};
 
+// Frequências para os sons
+const int freqAcerto = 1000; // Frequência para acerto
+const int freqErro = 500;     // Frequência para erro
+const int freqPulo = 300;     // Frequência para pulo
+const int freqDesistencia = 200; // Frequência para desistência
+
+// Melodia de vitória
+int victoryMelody[] = {262, 330, 392, 523, 659, 784, 1046};
+int victoryMelodyDurations[] = {400, 400, 400, 400, 400, 400, 800};
+
+// Função para reproduzir uma única nota no buzzer
+void playSound(int frequency, int duration) {
+  tone(buzzerPin, frequency);
+  delay(duration);
+  noTone(buzzerPin);
+}
+
+// Função para tocar a melodia de vitória
+void playVictoryMelody() {
+  for (int i = 0; i < sizeof(victoryMelody) / sizeof(int); i++) {
+    tone(buzzerPin, victoryMelody[i]);
+    delay(victoryMelodyDurations[i]);
+    noTone(buzzerPin);
+  }
+}
+
 void setup() {
   lcd.begin(16, 2);
   lcd.cursor();
   pinMode(10, INPUT_PULLUP);
   pinMode(9, INPUT_PULLUP);
   pinMode(8, INPUT_PULLUP); // Botão para pular a pergunta
-  pinMode(7, INPUT_PULLUP); // Botão para encerrar o jogo
+  pinMode(7, INPUT_PULLUP); // Botão para desistir do jogo
   pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
   Serial.begin(9600);
   randomSeed(analogRead(0)); // Inicializa o gerador de números aleatórios
 }
@@ -136,13 +164,13 @@ void loop() {
     for (int i = 0; i < comprimento; i++) {
         if (i == 16) {
             lcd.clear(); // Limpa o LCD após 16 caracteres
-            lcd.setCursor(0, 1); // Vai para a segunda linha
+            lcd.setCursor(1, 0); // Vai para a segunda linha
         } else if (i == 32) {
             lcd.clear(); // Limpa o LCD após 32 caracteres
             lcd.setCursor(1, 0); // Volta para a primeira linha
         } else if (i == 48) {
             lcd.clear(); // Limpa o LCD após 48 caracteres
-            lcd.setCursor(0, 1); // Vai para a segunda linha
+            lcd.setCursor(1,0); // Vai para a segunda linha
         }else if (i ==64){
           lcd.clear();
             lcd.setCursor(1,0);
@@ -170,12 +198,12 @@ void loop() {
   lcd.write("Nao");
   startTime = millis();
 
-  // Aguardar até que algum botão seja pressionado, o tempo se esgote, o botão de pular seja pressionado ou o botão de encerrar seja pressionado
+  // Aguardar até que algum botão seja pressionado, o tempo se esgote, o botão de pular seja pressionado ou o botão de desistir seja pressionado
   while (millis() - startTime < tempoTotal) {
     Botao_Sim = digitalRead(10);
     Botao_Nao = digitalRead(9);
     Botao_Pular = digitalRead(8);
-    Botao_Finalizar = digitalRead(7);
+    Botao_Desistir = digitalRead(7);
 
     // Verifica se o tempo restante está na metade e pisca o LED
     if (millis() - startTime >= tempoTotal / 2) {
@@ -185,7 +213,7 @@ void loop() {
       delay(500);
     }
 
-    if (Botao_Sim == HIGH || Botao_Nao == HIGH || Botao_Pular == HIGH || Botao_Finalizar == HIGH) {
+    if (Botao_Sim == HIGH || Botao_Nao == HIGH || Botao_Pular == HIGH || Botao_Desistir == HIGH) {
       break; // Sai do loop enquanto
     }
   }
@@ -214,7 +242,9 @@ void loop() {
         // Loop infinito para encerrar o jogo
       }
     }
-  } else if (Botao_Finalizar == HIGH || tentativas == 0) {
+    playSound(freqPulo, 200); // Reproduz o som de pulo
+  } else if (Botao_Desistir == HIGH || tentativas == 0) {
+    playSound(freqDesistencia, 200); // Reproduz o som de desistência
     lcd.write("Fim do Jogo!");
     lcd.setCursor(0, 1);
     lcd.write("Score=");
@@ -229,6 +259,7 @@ void loop() {
       // Adicionei um bônus de pontuação por resposta correta
       score += 2; // Adicionei um bônus extra por resposta rápida
       lcd.write("Resposta Correta! +2 pontos!");
+      playSound(freqAcerto, 200); // Reproduz o som de acerto
     } else {
       tentativas--;
       // Reduza o número de tentativas por resposta errada
@@ -246,6 +277,7 @@ void loop() {
           // Loop infinito para encerrar o jogo
         }
       }
+      playSound(freqErro, 200); // Reproduz o som de erro
     }
   }
 
@@ -254,5 +286,17 @@ void loop() {
   // Incrementa o número da questão para pular para a próxima
   numeroQuestao++;
 
-  
+  // Verifica se o jogo foi vencido (todas as perguntas respondidas corretamente)
+  if (numeroQuestao > 5 && tentativas > 0) {
+    lcd.clear();
+    lcd.write("Voce venceu!");
+    lcd.setCursor(0, 1);
+    lcd.write("Score=");
+    lcd.print(score);
+    delay(5000);
+    playVictoryMelody(); // Toca a melodia de vitória
+    while (true) {
+      // Loop infinito para manter a exibição da mensagem de vitória
+    }
+  }
 }
