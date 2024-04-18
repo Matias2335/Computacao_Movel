@@ -1,4 +1,10 @@
 <h1 align="center"> Relatório do Projeto de Computação Móvel </h1
+                                                               
+Participantes:
+
+- Guilherme Matias Rodrigues de Souza - R.A.: 22.122.071-1
+
+- Victor Caldeira Iak - R.A.: 22.122.057-7
 
 Introdução
 
