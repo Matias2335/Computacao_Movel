@@ -41,3 +41,6 @@ Conclusão:
 - Durante o desenvolvimento, o primeiro problema que encontramos foi na função do código que randomizava as perguntas. Inicialmente ela funcionava, porém conforme atualizamos o código, ela foi prejudicada, sendo assim ao invés de randomizar todas as perguntas ela repetia algumas. A solução encontrada para este problema foi retirar todas as atualizações que haviam sido alteradas no código, com isso descobrimos que o verdadeiro problema estava no buzzer que estava conectado na porta lógica A0, o que acabava não gerando o random de perguntas - quando você conecta algo à porta A0, o Arduino pode interpretar o sinal nessa porta como entrada analógica. Isso acabou interferindo na leitura dos dados analógicos e, consequentemente, afetando na aleatoriedade gerada pela função randomSeed().
 
 Link do vídeo de demonstração e explicação do projeto desenvolvido: https://drive.google.com/file/d/1nf7CF4pb4wJLQCIzZBsLyprjdINaqyqf/view?usp=sharing
+
+
+<image src = "3_CM.jfif" height="500">
