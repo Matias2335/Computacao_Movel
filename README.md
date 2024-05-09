@@ -38,5 +38,4 @@ Conclusão:
 
 Link do vídeo de demonstração e explicação do projeto desenvolvido: https://drive.google.com/file/d/1nf7CF4pb4wJLQCIzZBsLyprjdINaqyqf/view?usp=sharing
 
-
 <image src = "3_CM.jfif" height="500">
